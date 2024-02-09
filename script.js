@@ -1,4 +1,33 @@
-  // Global variable to hold the unique session ID
+async function fetchApiKey() {
+  // URL of your Cloud Function
+  const functionUrl = 'https://us-central1-chatbot-413804.cloudfunctions.net/gptapi2';
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: 'GET', // or 'POST' if your function expects a POST request
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any other headers your Cloud Function requires
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.apiKey; // Assuming the API key is returned in a property named apiKey
+    } else {
+      // Handle HTTP error responses
+      console.error('Failed to fetch the API key:', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    // Handle network errors
+    console.error('Network error when fetching the API key:', error);
+    return null;
+  }
+}
+
+
+// Global variable to hold the unique session ID
     var globalUniqueId;
     
     // Function to generate a unique 10-character combination of letters and numbers
@@ -76,7 +105,7 @@
         document.getElementById("loadingSpinner").style.display = "block";
         const userInputField = document.getElementById('userInput');
         const userPrompt = userInputField.value.trim();
-        const apiKey = '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';
+        const apiKey = await fetchApiKey();
         const url = "https://api.openai.com/v1/chat/completions";
     
         if (!userPrompt) {
