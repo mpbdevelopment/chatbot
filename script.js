@@ -113,7 +113,6 @@ window.onload = function() {
       .then(text => {
         // Store the fetched text in the global variable
         docContent = text;
-        console.log("Fetched content stored in global variable:", docContent);
 
         // You can now use globalTextContent anywhere in your script after it's been loaded
       })
