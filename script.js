@@ -40,11 +40,6 @@ async function fetchApiKey() {
         return uniqueId;
     }
     
-    // Use window.onload to assign a unique ID to the global variable when the window is fully loaded
-    window.onload = function() {
-        globalUniqueId = generateUniqueId();
-      console.log("SessionID Generated:", globalUniqueId);
-    };
     
     // Setup to capture user input on Enter key press
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -101,6 +96,11 @@ async function fetchApiKey() {
 let docContent;
 
 window.onload = function() {
+  
+    //Generate SessionID
+    globalUniqueId = generateUniqueId();
+    console.log("SessionID Generated:", globalUniqueId);
+  
     // URL of the text file you want to read
     const docUrl = 'https://script.google.com/macros/s/AKfycbxpF1YbxapbNHYc30nOyMtj0AV6yReW88NogAsb3Y4ChZKni0F0B04z5hEgNAglZ9nYGQ/exec';
 
