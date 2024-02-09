@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <title>Montclair Pickleball Chatbot</title>
+    <style>
+        /* Chat window styling */
+        #chatbox {
+            display: none; /* Initially hidden */
+            position: fixed;
+            bottom: 75px; /* Adjust based on your preference */
+            right: 10px; /* Adjust based on your preference */
+            width: 400px; /* Adjust based on your preference */
+            height: 500px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000; /* Ensure it's above other content */
+            display: flex;
+            flex-direction: column; /* Organize content vertically */
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        #chat {
+            flex: 1; /* Allows chat to fill available space */
+            overflow-y: auto;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+
+        .chatbox-empty::before {
+    content: "Hi there! I'm Montclair PickleBot, an AI powered chatbot that is trained to help you with all things related to Montclair Pickleball.\A \A You can ask me anything and I'll answer intelligently and comprehensively!\A \A Here are some examples of cool things you can ask me: \A -I’ve only played twice, which clinic should I sign up for?\A -I’m a 3.5 looking to play 3 evenings per week. Can you recommend a weekly schedule for clinics, open plays, and a specific coach who has won 5.0 tournaments that can give me private lessons?\A -How can I create more topspin on my forehand return?";
+    white-space: pre-wrap; /* Maintains formatting with line breaks (\A) */
+    color: #808080; /* Soft grey color */
+    padding: 10px; /* Adjust as needed */
+    display: block; /* Ensure it covers the background */
+    font-size: 0.9em; /* Adjust size as needed */
+    line-height: 1.2;
+}
+
+
+        /* Custom scrollbar styling */
+        #chat::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #chat::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        #chat::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        #chat::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .message {
+    position: relative;
+    padding: 8px 12px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+/* Styling for messages from the user */
+.user {
+    background-color: #0e2f7b;
+    color: white;
+    align-self: flex-end;
+    margin-right: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+.user::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #0e2f7b;
+    bottom: 0px;
+    right: -6px;
+    border-bottom-right-radius: 16px;
+    transform: translate(0, 50%) rotate(45deg);
+    z-index: -1;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+/* Styling for messages from the bot */
+.bot {
+    background-color: #f1f1f1;
+    color: black;
+    align-self: flex-start;
+    margin-left: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+.bot::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #f1f1f1;
+    bottom: 0px;
+    left: -6px;
+    border-bottom-left-radius: 16px;
+    transform: translate(0, 50%) rotate(-45deg);
+    z-index: -1;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+        /* Input area styling */
+        .inputArea {
+            display: flex;
+            padding: 5px; /* Adjust padding as needed */
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc; /* Restores border for clarity */
+            border-radius: 4px; /* Adds slight rounding to the input field */
+            margin-right: 5px; /* Spacing between input and button */
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        #sendButton {
+            padding: 10px 15px;
+            background-color: #0e2f7b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        /* Floating button styling */
+        #chatButton {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #39FF14;
+            color: black;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000; /* Ensure it's above other content */
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+        }
+
+        #chatButton:hover {
+            background-color: #0056b3; /* Darker shade for hover effect */
+        }
+
+        .dot {
+            animation: blink 1.4s infinite both;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+      
+               @media (max-width: 768px) {
+        #chatbox {
+            display: none; /* Initially hidden */
+            position: fixed;
+            bottom: 75px; /* Adjust based on your preference */
+            right: 10px; /* Adjust based on your preference */
+            width: 90%; /* Adjust based on your preference */
+            height: 85%;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000; /* Ensure it's above other content */
+            display: flex;
+            flex-direction: column; /* Organize content vertically */
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        #chatButton {
+            bottom: 20px; /* Adjust button position for visibility */
+            right: 20px;
+            font-size: 18px; /* Adjust font size for better readability */
+        }
+
+
+
+        .message {
+            max-width: 75%; /* Adjust message max-width for better layout */
+        }
+                 
+                 #chatButton:hover {
+            background-color: #39FF14; /* Darker shade for hover effect */
+        }
+
+    }
+
+ 
+    </style>
+</head>
+<body>
+
+<div id="chatbox" style="display: none;">
+    <h2 style="margin: 0; padding: 10px; background-color: #f2f2f2; border-bottom: 1px solid #ccc; font-size: 16px;">Ask me anything!</h2>
+    <div id="chat" class="chatbox-empty"></div>
+    <div id="loadingSpinner" style="display: none; text-align: center; padding: 10px; font-size: 18px">
+        Typing<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </div>
+    <div class="inputArea">
+        <input type="text" id="userInput" placeholder="Enter your question">
+        <button id="sendButton" onclick="sendToGPT4()">Send</button>
+    </div>
+</div>
+
+<button id="chatButton" onclick="toggleChat()">Ask me anything!</button>
+
+<script src="script.js">
+    
+    </script>
+    
+
+</body>
+</html>
