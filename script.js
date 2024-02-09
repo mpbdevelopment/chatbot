@@ -129,7 +129,7 @@ window.onload = function() {
         document.getElementById("loadingSpinner").style.display = "block";
         const userInputField = document.getElementById('userInput');
         const userPrompt = userInputField.value.trim();
-        const apiKey = const apiKey = await fetchApiKey();
+        const apiKey = await fetchApiKey();
         const url = "https://api.openai.com/v1/chat/completions";
     
         if (!userPrompt) {
