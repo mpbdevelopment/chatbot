@@ -1,28 +1,3 @@
-let docContent;
-
-window.onload = function() {
-    // URL of the content file
-    const docUrl = 'https://script.google.com/macros/s/AKfycbxpF1YbxapbNHYc30nOyMtj0AV6yReW88NogAsb3Y4ChZKni0F0B04z5hEgNAglZ9nYGQ/exec';
-
-    fetch(docUrl)
-      .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.text();
-      })
-      .then(text => {
-        // Store the fetched text in the global variable
-        docContent = text;
-        console.log("Fetched content stored in global variable:", docContent);
-
-        // You can now use globalTextContent anywhere in your script after it's been loaded
-      })
-      .catch(error => {
-        console.error('There was a problem with your fetch operation:', error);
-      });
-};
-
 async function fetchApiKey() {
   // URL of your Cloud Function
   const functionUrl = 'https://us-central1-chatbot-413804.cloudfunctions.net/gptapi2';
@@ -50,7 +25,6 @@ async function fetchApiKey() {
     return null;
   }
 }
-
 
 // Global variable to hold the unique session ID
     var globalUniqueId;
@@ -123,6 +97,31 @@ async function fetchApiKey() {
     return formattedText;
 }
 
+let docContent;
+
+window.onload = function() {
+    // URL of the text file you want to read
+    const docUrl = 'https://script.google.com/macros/s/AKfycbxpF1YbxapbNHYc30nOyMtj0AV6yReW88NogAsb3Y4ChZKni0F0B04z5hEgNAglZ9nYGQ/exec';
+
+    fetch(docUrl)
+      .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(text => {
+        // Store the fetched text in the global variable
+        docContent = text;
+        console.log("Fetched content stored in global variable:", docContent);
+
+        // You can now use globalTextContent anywhere in your script after it's been loaded
+      })
+      .catch(error => {
+        console.error('There was a problem with your fetch operation:', error);
+      });
+};
+
 
     
     // Function to send user input to the GPT model and handle the response
@@ -130,7 +129,7 @@ async function fetchApiKey() {
         document.getElementById("loadingSpinner").style.display = "block";
         const userInputField = document.getElementById('userInput');
         const userPrompt = userInputField.value.trim();
-        const apiKey = await fetchApiKey();
+        const apiKey = const apiKey = await fetchApiKey();
         const url = "https://api.openai.com/v1/chat/completions";
     
         if (!userPrompt) {
@@ -140,15 +139,14 @@ async function fetchApiKey() {
     
         appendMessage(userPrompt, 'user');
         userInputField.value = ''; // Clear the input after sending
+
     
         const payload = {
             model: 'gpt-4-turbo-preview',
-            messages: [...conversationHistory, 
-            {
+            messages: [...conversationHistory, {
                 "role": "system",
-                "content": docContent 
-            }, 
-            {
+                "content": docContent
+            }, {
                 "role": "user",
                 "content": userPrompt
             }],
