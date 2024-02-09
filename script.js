@@ -43,6 +43,7 @@ async function fetchApiKey() {
     // Use window.onload to assign a unique ID to the global variable when the window is fully loaded
     window.onload = function() {
         globalUniqueId = generateUniqueId();
+      console.log("SessionID Generated:", globalUniqueId);
     };
     
     // Setup to capture user input on Enter key press
