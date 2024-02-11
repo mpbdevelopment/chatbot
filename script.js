@@ -73,16 +73,16 @@ async function fetchApiKey() {
 }
 
     // Function to format the bot's response
-    function formatResponse(text) {
-    // Convert markdown links to HTML
+function formatResponse(text) {
+    // Convert markdown links to HTML with inline CSS for links
     let formattedText = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s"']*)\)/g, function(match, label, url) {
-        return '<a href="' + url + '" target="_blank">' + label + '</a>';
+        return '<a href="' + url + '" target="_blank" style="text-decoration: underline; color: blue;">' + label + '</a>';
     });
 
-    // Then, convert any remaining plain URLs into clickable links
+    // Then, convert any remaining plain URLs into clickable links with inline CSS
     const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])(?=\s|$)/ig;
     formattedText = formattedText.replace(urlRegex, function(url) {
-        return '<a href="' + url + '" target="_blank">' + url + '</a>';
+        return '<a href="' + url + '" target="_blank" style="text-decoration: underline; color: blue;">' + url + '</a>';
     });
 
     // Apply other formatting (bold, line breaks)
@@ -92,6 +92,7 @@ async function fetchApiKey() {
 
     return formattedText;
 }
+
 
 let docContent;
 
